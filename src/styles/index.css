@@ -1,0 +1,57 @@
+/* Fonts */
+@import "../assets/fonts/fonts.css";
+/* Reset */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Light & Dark Mode */
+@layer base {
+    :root {
+        --primary-bg: #FFF; /* Sidebar, header, tasks */
+        --secondary-bg: #f4f7fe; /* Body + dark mode switch */
+        --tertiary-bg: #e9eefa; /* Add new column section */
+        --button-primary: #625fc8;
+        --circle-primary: #f34649;
+        --circle-secondary: #4c7de5;
+        --circle-third: #0d9c9c;
+        --hover-bg:#e9eefa;
+        --icon-color: black;
+        --logo-color: #625fe8;
+        /* Fonts */
+        --primary-text: #FFF;
+        --secondary-text: #000;
+        --subtext-one: #69686d;
+        --subtext-two: #aac0dc;
+        --hover-text: #625fe8;
+    }
+
+    /* Dark Mode */
+    .dark {
+        --primary-bg: #2a2b37; /* Sidebar, header, tasks */
+        --secondary-bg: #1f202c; /* Body + dark mode switch */
+        --tertiary-bg: #22232f; /* Add new column bg */
+        --button-primary:#625fe8;
+        --circle-primary: #f34649;
+        --circle-secondary: #4c7de5;
+        --circle-third: #0d9c9c;
+        --hover-bg: #fff;
+        --icon-color: black;
+        --logo-color: #625fe8;
+        /* Fonts */
+        --primary-text: #FFF;
+        --secondary-text: #625fe8;
+        --subtext-one: #6f7076;
+        --subtext-two: #5f6d7b;
+        --hover-text : #FFF
+    }
+}
+/* body styles */
+#root {
+    font-family: "Monsterrat" , sans-serif;
+    font-weight: 300;
+}
