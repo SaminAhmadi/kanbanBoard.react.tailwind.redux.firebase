@@ -20,13 +20,13 @@ const Header: FC<HeaderProps> = ({ handleFnc }) => {
               size="32"
             />
           </button>
-          <h1 className="Montserrat-extraBold text-3xl">KanBan Board</h1>
+          <h1 className="Montserrat-extraBold text-3xl text-[var(--primary-text)]">
+            KanBan Board
+          </h1>
         </div>
         <div className="py-2">
           <button className="bg-[var(--button-primary)] border-0 px-3 py-2 rounded-3xl">
-            <p className="Montserrat-bold text-[var(--primary-text)] ">
-              + Add New Task
-            </p>
+            <p className="Montserrat-bold text-white">+ Add New Task</p>
           </button>
         </div>
       </div>

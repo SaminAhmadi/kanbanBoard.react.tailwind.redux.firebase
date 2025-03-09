@@ -2,8 +2,10 @@ import { FC } from 'react';
 
 const Footer: FC = () => {
   return (
-    <footer className="text-center">
-      <p className="Montserrat-medium">made with passion by s</p>
+    <footer className="text-center bg-[var(--primary-bg)]">
+      <p className="Montserrat-medium text-[var(--primary-text)]">
+        made with passion by s
+      </p>
     </footer>
   );
 };

@@ -7,6 +7,8 @@ export type Task = {
 // zustand props
 export interface zustandProps {
   tasks: Task[];
+  setTasks: (tasks: Task[]) => void; // Method to update tasks
+  updateTaskColumn: (taskId: string, newColumn: string) => void;
   addTask: (task: Task) => void;
   editTasks: (
     taskId: string,

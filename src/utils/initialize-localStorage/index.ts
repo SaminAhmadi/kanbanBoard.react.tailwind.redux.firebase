@@ -21,6 +21,12 @@ export const InitializeLocalStorage = () => {
           columnTitle: 'done',
           iconColor: 'fill-[var(--circle-third)]',
         },
+        {
+          id: '4',
+          title: 'Fixed Layout Bugs',
+          columnTitle: 'done',
+          iconColor: 'fill-[var(--circle-third)]',
+        },
       ]),
     );
   }

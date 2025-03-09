@@ -1,3 +1,5 @@
+import { Task } from '../../../../../store/types';
+
 export interface TaskProps {
-  task: string;
+  task: Task;
 }

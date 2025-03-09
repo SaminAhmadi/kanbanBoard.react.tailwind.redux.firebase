@@ -5,11 +5,11 @@ import IconProvider from '../../utils/icon-provider';
 // types
 import { RoadmapProps } from './types';
 
-const RoadmapPlans: FC<RoadmapProps> = ({ title, tasks, iconColor }) => {
-  console.log(iconColor);
+const RoadmapPlans: FC<RoadmapProps> = ({ tasks, iconColor, title }) => {
   return (
-    <div className="w-[20%] h-[43rem] flex flex-col gap-4">
-      <div className="flex items-center gap-1">
+    <div className="w-full h-[43rem] flex flex-col gap-4">
+      {/*column header*/}
+      <div className="flex items-center gap-1 ">
         <IconProvider
           icon="RecordCircle"
           className={iconColor}
@@ -20,9 +20,12 @@ const RoadmapPlans: FC<RoadmapProps> = ({ title, tasks, iconColor }) => {
           {title}
         </h3>
       </div>
-      <TaskCard task={tasks} />
-      <TaskCard task={tasks} />
-      <TaskCard task={tasks} />
+      {/* Task lists / rows */}
+      <div className=" w-full flex flex-col gap-3 overflow-y-auto shadow-[-6px_6px_17px_-6px_rgba(0,_0,_0,_0.1)]">
+        {tasks.map((task, index) => (
+          <TaskCard key={index} task={task} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -23,8 +23,8 @@
         --icon-color: black;
         --logo-color: #625fe8;
         /* Fonts */
-        --primary-text: #FFF;
-        --secondary-text: #000;
+        --primary-text: #000;
+        --secondary-text: #FFF;
         --subtext-one: #69686d;
         --subtext-two: #aac0dc;
         --hover-text: #625fe8;
@@ -47,7 +47,7 @@
         --secondary-text: #625fe8;
         --subtext-one: #6f7076;
         --subtext-two: #5f6d7b;
-        --hover-text : #FFF
+        --hover-text : #625fe8
     }
 }
 /* body styles */

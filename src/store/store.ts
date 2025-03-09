@@ -4,6 +4,14 @@ import { zustandProps } from './types';
 
 const useStore = create<zustandProps>(set => ({
   tasks: JSON.parse(localStorage.getItem('tasks') ?? '[]'),
+  setTasks: tasks => set({ tasks }),
+  updateTaskColumn: (taskId, newColumn) => {
+    set(state => ({
+      tasks: state.tasks.map(task =>
+        task.id === taskId ? { ...task, columnTitle: newColumn } : task,
+      ),
+    }));
+  },
   addTask: task =>
     set(state => {
       const newTasks = [...state.tasks, task];

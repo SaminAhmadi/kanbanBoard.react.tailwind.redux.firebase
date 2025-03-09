@@ -1,5 +1,7 @@
+import { Task } from '../../../store/types';
+
 export interface RoadmapProps {
   title: string;
-  tasks: string;
+  tasks: Task[];
   iconColor: string;
 }
