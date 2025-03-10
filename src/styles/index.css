@@ -13,14 +13,15 @@
 @layer base {
     :root {
         --primary-bg: #FFF; /* Sidebar, header, tasks */
-        --secondary-bg: #f4f7fe; /* Body + dark mode switch */
+        --secondary-bg: #f4f7fe; /* Body */
         --tertiary-bg: #e9eefa; /* Add new column section */
-        --button-primary: #625fc8;
-        --circle-primary: #f34649;
-        --circle-secondary: #4c7de5;
-        --circle-third: #0d9c9c;
+        --button-primary: #625fc8;  /* CTAs */
+        --button-secondary: #d9e1f7 ; /* dark mode button */
+        --circle-primary: #f34649;  /* column titles */
+        --circle-secondary: #4c7de5;  /* column titles */
+        --circle-third: #0d9c9c; /* column titles */
         --hover-bg:#e9eefa;
-        --icon-color: black;
+        --icon-color: #b0b0b0;
         --logo-color: #625fe8;
         /* Fonts */
         --primary-text: #000;
@@ -33,14 +34,15 @@
     /* Dark Mode */
     .dark {
         --primary-bg: #2a2b37; /* Sidebar, header, tasks */
-        --secondary-bg: #1f202c; /* Body + dark mode switch */
+        --secondary-bg: #1f202c; /* Body */
         --tertiary-bg: #22232f; /* Add new column bg */
-        --button-primary:#625fe8;
-        --circle-primary: #f34649;
-        --circle-secondary: #4c7de5;
-        --circle-third: #0d9c9c;
+        --button-primary:#625fe8; /* CTAs */
+        --button-secondary: #1e1f2a ; /* dark mode button */
+        --circle-primary: #f34649;  /* column titles */
+        --circle-secondary: #4c7de5;  /* column titles */
+        --circle-third: #0d9c9c; /* column titles */
         --hover-bg: #fff;
-        --icon-color: black;
+        --icon-color: #b0b0b0;
         --logo-color: #625fe8;
         /* Fonts */
         --primary-text: #FFF;
