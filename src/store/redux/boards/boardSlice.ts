@@ -8,10 +8,12 @@ interface Board {
 // Define the initial state type
 interface BoardState {
   boards: Board[];
+  loading: boolean;
 }
 
 const initialState: BoardState = {
   boards: [],
+  loading: false,
 };
 
 // Creating the board slice
@@ -19,6 +21,10 @@ const boardSlice = createSlice({
   name: 'board',
   initialState,
   reducers: {
+    // Action to start loading (useful for async calls)
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
     // Action to add a new board
     addBoard: (state, action: PayloadAction<Board>) => {
       state.boards.push(action.payload);
@@ -34,5 +40,6 @@ const boardSlice = createSlice({
   },
 });
 // Export actions for use in components
-export const { addBoard, setBoards, removeBoards } = boardSlice.actions;
+export const { addBoard, setBoards, removeBoards, setLoading } =
+  boardSlice.actions;
 export default boardSlice.reducer;

@@ -8,15 +8,21 @@ interface Column {
 }
 interface columnState {
   columns: Column[];
+  loading: boolean;
 }
 const initialState: columnState = {
   columns: [],
+  loading: false,
 };
 
 const columnSlice = createSlice({
   name: 'column',
   initialState,
   reducers: {
+    // Action to start loading (useful for async calls)
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
     // Action to add new column
     addColumn: (state, action: PayloadAction<Column>) => {
       state.columns.push(action.payload);
@@ -34,5 +40,6 @@ const columnSlice = createSlice({
   },
 });
 // Export actions for use in components
-export const { addColumn, setColumns, removeColumn } = columnSlice.actions;
+export const { addColumn, setColumns, removeColumn, setLoading } =
+  columnSlice.actions;
 export default columnSlice.reducer;
