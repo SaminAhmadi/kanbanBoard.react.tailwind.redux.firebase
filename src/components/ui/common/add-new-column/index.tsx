@@ -6,7 +6,7 @@ const AddNewColumn: FC = () => {
   let [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   return (
     <>
-      <div className="flex gap-2 items-center justify-center bg-[var(--tertiary-bg)] w-full">
+      <div className="flex gap-2 items-center justify-center bg-[var(--tertiary-bg)] max-w-full p-4">
         <IconProvider
           icon="AddCircle"
           className="fill-[var(--subtext-two)] cursor-pointer"

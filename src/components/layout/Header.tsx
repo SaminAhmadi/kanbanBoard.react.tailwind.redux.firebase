@@ -9,7 +9,6 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ handleFnc }) => {
   let [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  console.log(handleFnc);
 
   return (
     <>

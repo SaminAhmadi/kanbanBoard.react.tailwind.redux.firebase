@@ -1,10 +1,12 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../../firebase/firebaseConfig';
 
-interface Task {
-  id: number;
-  boardId: string;
-  columnId: string;
-  name: string;
+export interface Task {
+  id: string;
+  boardID: string;
+  columnID: string;
+  description: string;
 }
 interface taskState {
   tasks: Task[];
@@ -30,11 +32,37 @@ const taskSlice = createSlice({
     setTasks: (state, action: PayloadAction<Task[]>) => {
       state.tasks = action.payload;
     },
-    removeTasks: (state, action: PayloadAction<number>) => {
+    removeTasks: (state, action: PayloadAction<string>) => {
       state.tasks = state.tasks.filter(task => task.id !== action.payload);
     },
   },
+  extraReducers: builder => {
+    builder
+      .addCase(fetchTasks.pending, state => {
+        state.loading = true;
+      })
+      .addCase(fetchTasks.fulfilled, (state, action) => {
+        state.tasks = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchTasks.rejected, state => {
+        state.loading = false;
+      });
+  },
 });
+
+// Async thunk to fetch tasks based on the selected board
+export const fetchTasks = createAsyncThunk(
+  'tasks/fetchTasks',
+  async (boardID: string) => {
+    const q = query(collection(db, 'tasks'), where('boardID', '==', boardID));
+    const taskDocs = await getDocs(q);
+    return taskDocs.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Task[];
+  },
+);
 
 export const { addTasks, setTasks, removeTasks, setLoading } =
   taskSlice.actions;

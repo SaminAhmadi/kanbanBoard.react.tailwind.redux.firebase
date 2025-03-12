@@ -1,12 +1,25 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 // components
 import IconProvider from '../../utils/icon-provider';
 import BoardModal from '../ui/common/modal/add-new-board';
+import {
+  fetchBoards,
+  setCurrentBoard,
+} from '../../store/redux/boards/boardSlice.ts';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
 interface sidebarProps {
   open: boolean;
 }
 const SideBarMenu: FC<sidebarProps> = ({ open }) => {
+  const dispatch = useAppDispatch();
+  const boards = useAppSelector(state => state.board.boards);
+  const loading = useAppSelector(state => state.board.loading);
+  // fetching data
+  useEffect(() => {
+    dispatch(fetchBoards());
+  }, [dispatch]);
+
   // dark mode functionality
   const [isDarkMode, setIsDarkMode] = useState(false);
   const toggleDarkMode = () => {
@@ -17,11 +30,18 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
       document.documentElement.classList.remove('dark');
     }
   };
-  // add board functionality
+
+  // open modal functionality
   let [isOpenModal, setIsOpenModal] = useState(false);
+
+  // select a board based on their id
+  const handleBoardSelect = (boardId: string) => {
+    dispatch(setCurrentBoard(boardId));
+  };
   return (
     open && (
       <>
+        {loading && <p className="Montserrat-medium">Loading boards</p>}
         <nav className="w-[17%] pt-3 flex flex-col gap-2 bg-[var(--primary-bg)]">
           {/* boards section */}
           <p className="Montserrat-regular text-[var(--subtext-one)] pb-2 pl-3">
@@ -29,17 +49,24 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
           </p>
           <div className="w-full h-full flex flex-col gap-1.5">
             <div className="flex flex-col gap-3">
-              <div className=" w-[90%] flex items-center gap-2 hover:bg-[var(--button-primary)] bg-[var(--tertiary-bg)] rounded-tr-2xl rounded-br-2xl p-3 cursor-pointer transition">
-                <IconProvider
-                  icon="MenuBoard"
-                  size="21"
-                  className="fill-[var(--icon-color)]"
-                  variant="Bold"
-                />
-                <a className="Montserrat-semiBold text-[var(--primary-text)] hover:text-white transition duration-200 ">
-                  Roadmap
-                </a>
-              </div>
+              {boards.map(board => (
+                <button
+                  key={board.id}
+                  className="Montserrat-semiBold text-[var(--primary-text)] hover:text-white transition duration-200"
+                  onClick={() => handleBoardSelect(board.id)}
+                >
+                  <div className=" w-[90%] flex items-center gap-2 hover:bg-[var(--button-primary)] bg-[var(--tertiary-bg)] rounded-tr-2xl rounded-br-2xl p-3 cursor-pointer transition">
+                    <IconProvider
+                      icon="MenuBoard"
+                      size="21"
+                      className="fill-[var(--icon-color)]"
+                      variant="Bold"
+                    />
+
+                    {board.title}
+                  </div>
+                </button>
+              ))}
             </div>
             {/* create new board */}
             <div className="flex flex-col gap-3">
