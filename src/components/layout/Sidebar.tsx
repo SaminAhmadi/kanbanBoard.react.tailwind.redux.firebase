@@ -20,6 +20,11 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
     dispatch(fetchBoards());
   }, [dispatch]);
 
+  // select a board based on their id
+  const handleBoardSelect = (boardId: string) => {
+    dispatch(setCurrentBoard(boardId));
+  };
+
   // dark mode functionality
   const [isDarkMode, setIsDarkMode] = useState(false);
   const toggleDarkMode = () => {
@@ -34,10 +39,6 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
   // open modal functionality
   let [isOpenModal, setIsOpenModal] = useState(false);
 
-  // select a board based on their id
-  const handleBoardSelect = (boardId: string) => {
-    dispatch(setCurrentBoard(boardId));
-  };
   return (
     open && (
       <>

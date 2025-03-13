@@ -9,6 +9,8 @@ interface boardColumnProps {
 
 const BoardColumns: FC<boardColumnProps> = ({ title, color }) => {
   const loading = useAppSelector(state => state.column.loading);
+  const currentBoardID = useAppSelector(state => state.board.currentBoardId);
+  console.log(currentBoardID, color);
   return (
     <>
       {loading && <p className="Montserrat-medium">loading data..</p>}
@@ -18,7 +20,7 @@ const BoardColumns: FC<boardColumnProps> = ({ title, color }) => {
             icon="RecordCircle"
             size="22"
             variant="Bulk"
-            className={color ? String(color) : 'fill-[var(--circle-third)]'}
+            color={`var(${color})`}
           />
           <h3 className="Montserrat-bold text-[--subtext-one] tracking-[0.5rem]">
             {title}
