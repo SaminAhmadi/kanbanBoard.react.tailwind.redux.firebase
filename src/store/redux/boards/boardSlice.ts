@@ -1,7 +1,15 @@
 // Define the type for a single board
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { collection, getDocs } from 'firebase/firestore';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  collection,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig.js';
+import { removeColumn } from '../columns/columnSlice.ts';
+import { removeTasks } from '../tasks/taskSlice.ts';
 
 export interface Board {
   id: string;
@@ -60,6 +68,39 @@ export const fetchBoards = () => async (dispatch: any) => {
   dispatch(boardSlice.actions.setBoards(boardList));
   dispatch(boardSlice.actions.setLoading(false));
 };
+
+// updating firebase boards
+export const addBoardToFirebase = createAsyncThunk(
+  'boards/addBoardToFirebase',
+  async (boardTitle: string, { dispatch }) => {
+    try {
+      const docRef = await addDoc(collection(db, 'boards'), {
+        title: boardTitle,
+      });
+      const newBoard = { id: docRef.id, title: boardTitle };
+      dispatch(addBoard(newBoard)); // Update Redux state
+    } catch (error) {
+      console.error('Error adding board:', error);
+    }
+  },
+);
+// deleting a board inside firebase and redux
+export const removeBoard = createAsyncThunk(
+  'boards/removeBoard',
+  async (boardID: string, { dispatch }) => {
+    try {
+      await deleteDoc(doc(db, 'boards', boardID));
+      await deleteDoc(doc(db, 'columns', boardID));
+      await deleteDoc(doc(db, 'tasks', boardID));
+      dispatch(removeBoards(boardID));
+      dispatch(removeColumn(boardID));
+      dispatch(removeTasks(boardID));
+      console.log('board deleted successfully!');
+    } catch (error) {
+      console.log('board didnt get deleted cause the error is :', error);
+    }
+  },
+);
 // Export actions for use in components
 export const {
   addBoard,

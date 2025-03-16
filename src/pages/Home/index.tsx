@@ -14,12 +14,13 @@ const Home: FC = () => {
   const currentBoardId = useAppSelector(state => state.board.currentBoardId);
   const columns = useAppSelector(state => state.column.columns);
   const tasks = useAppSelector(state => state.task.tasks);
-  console.log('Current board ID :', currentBoardId);
 
   useEffect(() => {
     if (currentBoardId) {
       dispatch(fetchColumns(currentBoardId));
       dispatch(fetchTasks(currentBoardId));
+      console.log('Tasks in Redux:', tasks);
+      console.log('Columns in Redux:', columns);
     }
   }, [currentBoardId, dispatch]);
   if (columns.length <= 0)
@@ -38,7 +39,16 @@ const Home: FC = () => {
           {/* Render tasks that belong to this column */}
           <div className="w-full flex flex-col gap-3 overflow-y-auto shadow-[-6px_6px_17px_-6px_rgba(0,_0,_0,_0.1)]">
             {tasks
-              .filter(task => task.columnID === col.id)
+              .filter(task => {
+                console.log(
+                  `Checking task ${task.description} with status ${task.status}`,
+                );
+                console.log(
+                  `Does it match column title ${col.title}?`,
+                  task.status === col.title,
+                );
+                return task.status === col.title;
+              })
               .map(task => (
                 <TaskCard key={task.id} title={task.description} />
               ))}

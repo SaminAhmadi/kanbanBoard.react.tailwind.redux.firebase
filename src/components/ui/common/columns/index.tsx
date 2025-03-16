@@ -25,7 +25,7 @@ const BoardColumns: FC<boardColumnProps> = ({ title, color }) => {
               variant="Bulk"
               color={`var(${color})`}
             />
-            <h3 className="Montserrat-bold text-[--subtext-one] tracking-[0.5rem]">
+            <h3 className="Montserrat-bold text-[--subtext-one] tracking-[0.5rem] capitalize">
               {title}
             </h3>
           </div>

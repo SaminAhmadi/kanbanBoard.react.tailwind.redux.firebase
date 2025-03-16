@@ -1,17 +1,22 @@
-import { FC } from 'react';
-import IconProvider from '../../../../../utils/icon-provider';
+import { FC, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { addBoardToFirebase } from '../../../../../store/redux/boards/boardSlice.ts';
 
 interface BoardModalProps {
   openAnchorEl: boolean;
   onClose: () => void;
 }
 const BoardModal: FC<BoardModalProps> = ({ onClose, openAnchorEl }) => {
+  let [newBoard, setNewBoard] = useState<string>('');
+  const dispatch = useAppDispatch();
+  const boards = useAppSelector(state => state.board.boards);
+  console.log(newBoard);
+  console.log(boards);
   if (!openAnchorEl) return null;
   return (
     <div
       id="default-modal"
       tabIndex={-1}
-      aria-hidden="true"
       className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full py-3"
     >
       {/* Transparent Black Background */}
@@ -34,39 +39,24 @@ const BoardModal: FC<BoardModalProps> = ({ onClose, openAnchorEl }) => {
           {/* form content */}
           <div className="flex flex-col gap-4">
             <label className="Montserrat-medium text-[var(--subtext-one)] text-sm">
-              Board columns
+              Create New Board
             </label>
             <div className="flex flex-col gap-2">
-              <div className="flex gap-2 items-center">
-                <input className="rounded-md p-2 w-[90%] border-2 outline-none bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]" />
-                <IconProvider
-                  icon="Trash"
-                  size="20"
-                  color="grey"
-                  className="cursor-pointer"
-                />
-              </div>
-              <div className="flex gap-2 items-center">
-                <input className="rounded-md p-2 w-[90%] border-2 outline-none bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]" />
-                <IconProvider
-                  icon="Trash"
-                  size="20"
-                  color="grey"
-                  className="cursor-pointer"
-                />
-              </div>
+              <input
+                className="rounded-md p-2 w-full border-2 outline-none bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]"
+                placeholder="e.g : Todo"
+                onChange={event => setNewBoard(event.target.value)}
+              />
             </div>
-            {/* add new column */}
-            <button
-              type="button"
-              className="Montserrat-semiBold bg-[var(--button-secondary)] text-[var(--primary-text)] w-full rounded-lg px-3 py-2 shadow-xl"
-            >
-              + Add new column
-            </button>
           </div>
           <button
             type="button"
             className="Montserrat-medium text-white bg-[var(--button-primary)] rounded-lg px-3 py-2"
+            onClick={() => {
+              if (newBoard.trim() === '') return;
+              dispatch(addBoardToFirebase(newBoard));
+              setNewBoard(' ');
+            }}
           >
             Save Changes
           </button>

@@ -4,6 +4,7 @@ import IconProvider from '../../utils/icon-provider';
 import BoardModal from '../ui/common/modal/add-new-board';
 import {
   fetchBoards,
+  removeBoard,
   setCurrentBoard,
 } from '../../store/redux/boards/boardSlice.ts';
 import { useAppDispatch, useAppSelector } from '../../hooks';
@@ -52,26 +53,35 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
               <p className="Montserrat-regular text-[var(--subtext-one)] pb-2 pl-3">
                 ALL BOARDS
               </p>
-              <div className="w-full h-full flex flex-col gap-1.5">
+              <div className="w-full h-full flex flex-col gap-1.5 group transition-colors duration-200">
                 <div className="flex flex-col gap-3">
-                  {boards.map(board => (
-                    <button
-                      key={board.id}
-                      className="Montserrat-semiBold text-[var(--primary-text)] hover:text-white transition duration-200"
-                      onClick={() => handleBoardSelect(board.id)}
-                    >
-                      <div className=" w-[90%] flex items-center gap-2 hover:bg-[var(--button-primary)] bg-[var(--tertiary-bg)] rounded-tr-2xl rounded-br-2xl p-3 cursor-pointer transition">
-                        <IconProvider
-                          icon="MenuBoard"
-                          size="21"
-                          className="fill-[var(--icon-color)]"
-                          variant="Bold"
-                        />
-
-                        {board.title}
-                      </div>
-                    </button>
-                  ))}
+                  {boards
+                    .slice() // Create a shallow copy to avoid mutating state
+                    .sort((a, b) => a.id.localeCompare(b.id)) // Sort alphabetically by ID
+                    .map(board => (
+                      <button
+                        key={board.id}
+                        className="Montserrat-semiBold group text-[var(--primary-text)] hover:text-white transition duration-200"
+                        onClick={() => handleBoardSelect(board.id)}
+                      >
+                        <div className="w-[90%] flex items-center justify-between hover:bg-[var(--button-primary)] bg-[var(--tertiary-bg)] rounded-tr-2xl rounded-br-2xl p-3 cursor-pointer transition">
+                          <IconProvider
+                            icon="MenuBoard"
+                            size="21"
+                            className="fill-[var(--icon-color)]"
+                            variant="Bold"
+                          />
+                          <p>{board.title}</p>
+                          <IconProvider
+                            icon="Trash"
+                            size="21"
+                            variant="Bold"
+                            className="fill-[var(--icon-color)] cursor-pointer"
+                            onClick={() => dispatch(removeBoard(board.id))}
+                          />
+                        </div>
+                      </button>
+                    ))}
                 </div>
                 {/* create new board */}
                 <div className="flex flex-col gap-3">

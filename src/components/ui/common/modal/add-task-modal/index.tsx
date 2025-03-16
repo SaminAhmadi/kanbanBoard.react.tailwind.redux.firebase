@@ -1,5 +1,6 @@
-import { FC } from 'react';
-import IconProvider from '../../../../../utils/icon-provider';
+import { FC, FormEvent, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { addToTasks } from '../../../../../store/redux/tasks/taskSlice.ts';
 // style
 
 interface ModalProps {
@@ -8,6 +9,17 @@ interface ModalProps {
 }
 
 const Modal: FC<ModalProps> = ({ isOpen, onClose }) => {
+  let [description, setDescription] = useState<string>('');
+  let [status, setStatus] = useState<string>('todo');
+  const dispatch = useAppDispatch();
+  const currentBoardID = useAppSelector(state => state.board.currentBoardId);
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault(); // Prevent default form submission behavior
+
+    // Dispatch your task adding logic here, passing description and status
+    dispatch(addToTasks({ description, status, currentBoardID }));
+  };
   if (!isOpen) return null;
   return (
     // main Modal
@@ -21,7 +33,7 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose }) => {
       <div className="transparent-bg"></div>
       <div className="relative z-[40] w-[30%] max-w-2xl max-h-full p-6  bg-[var(--secondary-bg)] rounded-lg shadow-lg">
         {/*  modal content */}
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           {/* form header */}
           <div className="flex w-full items-center justify-between">
             <h3 className="Montserrat-semiBold text-[var(--primary-text)]">
@@ -34,67 +46,33 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose }) => {
               Close
             </button>
           </div>
-          {/* form content */}
-          <div className="flex flex-col gap-2">
-            {/*Task name input*/}
-            <label className="Montserrat-medium text-[var(--subtext-one)] text-sm">
-              Task Name
-            </label>
-            <input
-              placeholder="e.g take coffee break"
-              className="border-2 outline-0 p-2 rounded-md bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]"
-            />
-          </div>
           {/*description of the task */}
           <div className="flex flex-col gap-2">
             <label className="Montserrat-medium text-[var(--subtext-one)] text-sm">
-              Description
+              Task Description
             </label>
             <textarea
               className="border-2 outline-0 resize-none p-2 rounded-md bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]"
               rows={8}
               placeholder="e.g it's always good to take a break."
+              onChange={event => setDescription(event.target.value)}
             />
-          </div>
-          {/* subtasks input */}
-          <div className="flex flex-col gap-4">
-            <label className="Montserrat-medium text-[var(--subtext-one)] text-sm">
-              Subtasks
-            </label>
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-2 items-center">
-                <input className="rounded-md p-2 w-[90%] border-2 outline-none bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]" />
-                <IconProvider
-                  icon="Trash"
-                  size="20"
-                  color="grey"
-                  className="cursor-pointer"
-                />
-              </div>
-              <div className="flex gap-2 items-center">
-                <input className="rounded-md p-2 w-[90%] border-2 outline-none bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]" />
-                <IconProvider
-                  icon="Trash"
-                  size="20"
-                  color="grey"
-                  className="cursor-pointer"
-                />
-              </div>
-            </div>
-            {/* add new subtask */}
-            <button
-              type="button"
-              className="Montserrat-semiBold bg-[var(--button-primary)] text-white w-full rounded-lg px-3 py-2"
-            >
-              + Add new Subtask
-            </button>
           </div>
           {/*drop down*/}
           <div className="flex flex-col gap-2">
             <label className="Montserrat-medium text-[var(--subtext-one)] text-sm">
               Current status
             </label>
-            <select className="p-2 outline-0 border-2 bg-transparent rounded-md text-[var(--primary-text)] focus:border-[var(--hover-text)]">
+            <select
+              className="p-2 outline-0 border-2 bg-transparent rounded-md text-[var(--primary-text)] focus:border-[var(--hover-text)]"
+              value={status}
+              onChange={event => {
+                if (event.target.value === '') return;
+                else {
+                  setStatus(event.target.value);
+                }
+              }}
+            >
               <option
                 value="todo"
                 className="Montserrat-regular text-[var(--primary-text)] bg-[var(--primary-bg)]"
@@ -117,6 +95,13 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose }) => {
               </option>
             </select>
           </div>
+          {/* submit button */}
+          <button
+            className="Montserrat-medium text-white bg-[--button-primary] rounded-xl p-3"
+            type="submit"
+          >
+            Submit
+          </button>
         </form>
       </div>
     </div>

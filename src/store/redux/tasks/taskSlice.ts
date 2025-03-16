@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig';
 
 export interface Task {
   id: string;
-  boardID: string;
-  columnID: string;
   description: string;
+  status: string;
+  boardID: string | null;
 }
 interface taskState {
   tasks: Task[];
@@ -33,7 +33,7 @@ const taskSlice = createSlice({
       state.tasks = action.payload;
     },
     removeTasks: (state, action: PayloadAction<string>) => {
-      state.tasks = state.tasks.filter(task => task.id !== action.payload);
+      state.tasks = state.tasks.filter(task => task.boardID !== action.payload);
     },
   },
   extraReducers: builder => {
@@ -51,6 +51,11 @@ const taskSlice = createSlice({
   },
 });
 
+// capitalize words function
+const capitalizeWords = (str: string) => {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+};
+
 // Async thunk to fetch tasks based on the selected board
 export const fetchTasks = createAsyncThunk(
   'tasks/fetchTasks',
@@ -61,6 +66,33 @@ export const fetchTasks = createAsyncThunk(
       id: doc.id,
       ...doc.data(),
     })) as Task[];
+  },
+);
+
+// add new tasks to firebase and redux
+export const addToTasks = createAsyncThunk(
+  'tasks/addToTasks',
+  async (
+    {
+      description,
+      status,
+      currentBoardID,
+    }: { description: string; status: string; currentBoardID: string | null },
+    { dispatch },
+  ) => {
+    const taskDocs = await addDoc(collection(db, 'tasks'), {
+      description: description,
+      status: capitalizeWords(status),
+      boardID: currentBoardID,
+    });
+    dispatch(
+      addTasks({
+        description: description,
+        id: taskDocs.id,
+        status: capitalizeWords(status),
+        boardID: currentBoardID,
+      }),
+    );
   },
 );
 

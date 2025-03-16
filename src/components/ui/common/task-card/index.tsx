@@ -9,6 +9,7 @@ interface TaskCardProps {
 
 const TaskCard: FC<TaskCardProps> = ({ title }) => {
   const loading = useAppSelector(state => state.task.loading);
+  console.log(title);
   return (
     <>
       {loading ? (

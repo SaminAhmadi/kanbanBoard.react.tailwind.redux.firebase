@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig.js';
 
 export interface Column {
-  boardID: string;
+  boardID: string | null;
   title: string;
   id: string;
   icon: string;
@@ -38,7 +38,7 @@ const columnSlice = createSlice({
     // Action to remove a column
     removeColumn: (state, action: PayloadAction<string>) => {
       state.columns = state.columns.filter(
-        column => column.id !== action.payload,
+        column => column.boardID !== action.payload,
       );
     },
   },
@@ -57,6 +57,11 @@ const columnSlice = createSlice({
       });
   },
 });
+
+// capitalize words function
+const capitalizeWords = (str: string) => {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+};
 // Async thunk to fetch columns for a selected board
 export const fetchColumns = createAsyncThunk(
   'columns/fetchColumns',
@@ -67,6 +72,44 @@ export const fetchColumns = createAsyncThunk(
       id: doc.id,
       ...doc.data(),
     })) as Column[];
+  },
+);
+
+// async thunk to add extra columns on the current board
+export const addNewColumn = createAsyncThunk(
+  'columns/addNewColumn',
+  async (
+    {
+      columnTitle,
+      currentBoard,
+    }: { columnTitle: string; currentBoard: string | null },
+    { dispatch },
+  ) => {
+    try {
+      const icons = [
+        '--circle-primary',
+        '--circle-secondary',
+        '--circle-third',
+      ];
+      const randomIndex = Math.floor(Math.random() * icons.length);
+      const currentIcon = icons[randomIndex];
+      console.log(currentIcon);
+      const ColumnDocs = await addDoc(collection(db, 'columns'), {
+        id: Math.floor(Math.random() * 100),
+        title: capitalizeWords(columnTitle),
+        boardID: currentBoard,
+        icon: currentIcon,
+      });
+      const newCol = {
+        id: ColumnDocs.id,
+        title: capitalizeWords(columnTitle),
+        boardID: currentBoard,
+        icon: '--circle-third',
+      };
+      dispatch(addColumn(newCol)); // update redux
+    } catch (error) {
+      console.log('adding column error: ', error);
+    }
   },
 );
 // Export actions for use in components

@@ -1,11 +1,17 @@
-import { FC } from 'react';
-import IconProvider from '../../../../../utils/icon-provider';
+import { FC, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { addNewColumn } from '../../../../../store/redux/columns/columnSlice.ts';
 
-interface CclumnModalProps {
+interface ColumnModalProps {
   onClose: () => void;
   openAnchEl: boolean;
 }
-const ColumnModal: FC<CclumnModalProps> = ({ onClose, openAnchEl }) => {
+const ColumnModal: FC<ColumnModalProps> = ({ onClose, openAnchEl }) => {
+  let [newCol, setNewCol] = useState<string>(' ');
+  const dispatch = useAppDispatch();
+  const currentBoard = useAppSelector(state => state.board.currentBoardId);
+  const columnList = useAppSelector(state => state.column.columns);
+  console.log(columnList);
   if (!openAnchEl) return null;
   return (
     <div
@@ -34,39 +40,30 @@ const ColumnModal: FC<CclumnModalProps> = ({ onClose, openAnchEl }) => {
           {/* form content */}
           <div className="flex flex-col gap-4">
             <label className="Montserrat-medium text-[var(--subtext-one)] text-sm">
-              Board columns
+              Give A Name To Your Column
             </label>
             <div className="flex flex-col gap-2">
-              <div className="flex gap-2 items-center">
-                <input className="rounded-md p-2 w-[90%] border-2 outline-none bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]" />
-                <IconProvider
-                  icon="Trash"
-                  size="20"
-                  color="grey"
-                  className="cursor-pointer"
-                />
-              </div>
-              <div className="flex gap-2 items-center">
-                <input className="rounded-md p-2 w-[90%] border-2 outline-none bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]" />
-                <IconProvider
-                  icon="Trash"
-                  size="20"
-                  color="grey"
-                  className="cursor-pointer"
-                />
-              </div>
+              <input
+                className="rounded-md p-2 w-full border-2 outline-none bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]"
+                placeholder="e.g: Todo"
+                onChange={event => setNewCol(event.target.value)}
+              />
             </div>
-            {/* add new column */}
-            <button
-              type="button"
-              className="Montserrat-semiBold bg-[var(--button-secondary)] text-[var(--primary-text)] w-full rounded-lg px-3 py-2 shadow-xl"
-            >
-              + Add new column
-            </button>
           </div>
           <button
             type="button"
             className="Montserrat-medium text-white bg-[var(--button-primary)] rounded-lg px-3 py-2"
+            onClick={() => {
+              if (newCol === '') return;
+              else {
+                dispatch(
+                  addNewColumn({
+                    columnTitle: newCol,
+                    currentBoard: currentBoard,
+                  }),
+                );
+              }
+            }}
           >
             Save Changes
           </button>
