@@ -1,12 +1,22 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  updateDoc,
+} from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig.js';
+import columns from '../../../components/ui/common/columns';
 
 export interface Column {
   boardID: string | null;
   title: string;
   id: string;
   icon: string;
+  position: number;
 }
 interface columnState {
   columns: Column[];
@@ -74,6 +84,28 @@ export const fetchColumns = createAsyncThunk(
     })) as Column[];
   },
 );
+// After adding a new column, update other columns' positions
+const updateColumnPositions = async (
+  boardID: string | null,
+  newPosition: number,
+) => {
+  const columnsQuery = query(
+    collection(db, 'columns'),
+    where('boardID', '==', boardID),
+    orderBy('position'),
+  );
+  const querySnapshot = await getDocs(columnsQuery);
+
+  // Create an array of promises for each updateDoc operation
+  const updatePromises = querySnapshot.docs.map(async (doc, index) => {
+    const columnRef = doc.ref;
+    const updatedPosition = index >= newPosition ? index + 1 : index;
+    await updateDoc(columnRef, { position: updatedPosition });
+  });
+
+  // Wait for all updates to complete
+  await Promise.all(updatePromises);
+};
 
 // async thunk to add extra columns on the current board
 export const addNewColumn = createAsyncThunk(
@@ -99,13 +131,16 @@ export const addNewColumn = createAsyncThunk(
         title: capitalizeWords(columnTitle),
         boardID: currentBoard,
         icon: currentIcon,
+        position: columns.length + 1,
       });
       const newCol = {
         id: ColumnDocs.id,
         title: capitalizeWords(columnTitle),
         boardID: currentBoard,
         icon: '--circle-third',
+        position: columns.length + 1,
       };
+      await updateColumnPositions(currentBoard, columns.length);
       dispatch(addColumn(newCol)); // update redux
     } catch (error) {
       console.log('adding column error: ', error);

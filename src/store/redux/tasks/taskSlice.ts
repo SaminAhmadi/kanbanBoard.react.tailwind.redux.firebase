@@ -1,5 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+} from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig';
 
 export interface Task {
@@ -11,11 +19,13 @@ export interface Task {
 interface taskState {
   tasks: Task[];
   loading: boolean;
+  currentID: string | null;
 }
 
 const initialState: taskState = {
   tasks: [],
   loading: false,
+  currentID: null,
 };
 
 const taskSlice = createSlice({
@@ -34,6 +44,9 @@ const taskSlice = createSlice({
     },
     removeTasks: (state, action: PayloadAction<string>) => {
       state.tasks = state.tasks.filter(task => task.boardID !== action.payload);
+    },
+    setCurrentID: (state, action: PayloadAction<string | null>) => {
+      state.currentID = action.payload;
     },
   },
   extraReducers: builder => {
@@ -96,6 +109,19 @@ export const addToTasks = createAsyncThunk(
   },
 );
 
-export const { addTasks, setTasks, removeTasks, setLoading } =
+// async thunk to delete tasks
+export const deleteTaskFromFirebase = createAsyncThunk(
+  'tasks/deleteTaskFromFirebase',
+  async (taskID: string, { dispatch }) => {
+    try {
+      await deleteDoc(doc(db, 'tasks', taskID));
+      dispatch(removeTasks(taskID));
+      console.log('task deleted successfuly', taskID);
+    } catch (error) {
+      console.log('task couldnt get removed due to ', error);
+    }
+  },
+);
+export const { addTasks, setTasks, removeTasks, setLoading, setCurrentID } =
   taskSlice.actions;
 export default taskSlice.reducer;
