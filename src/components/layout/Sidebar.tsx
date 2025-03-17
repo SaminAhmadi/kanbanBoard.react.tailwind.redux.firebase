@@ -9,6 +9,10 @@ import {
 } from '../../store/redux/boards/boardSlice.ts';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import NavSkeleton from '../ui/skeleton/nav-skeleton';
+import {
+  fetchDarkMode,
+  updateDarkModeFirebase,
+} from '../../store/redux/darkmode';
 
 interface sidebarProps {
   open: boolean;
@@ -17,27 +21,19 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
   const dispatch = useAppDispatch();
   const boards = useAppSelector(state => state.board.boards);
   const loading = useAppSelector(state => state.board.loading);
+  const isDarkMode = useAppSelector(
+    state => state.darkmode.darkmode.isDarkMode,
+  );
   // fetching data
   useEffect(() => {
     dispatch(fetchBoards());
+    dispatch(fetchDarkMode());
   }, [dispatch]);
 
   // select a board based on their id
   const handleBoardSelect = (boardId: string) => {
     dispatch(setCurrentBoard(boardId));
   };
-
-  // dark mode functionality
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    if (!isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
-
   // open modal functionality
   let [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -71,7 +67,9 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
                             className="fill-[var(--icon-color)]"
                             variant="Bold"
                           />
-                          <p>{board.title}</p>
+                          <p className="Montserrat-bold text-[0.9rem]">
+                            {board.title}
+                          </p>
                           <IconProvider
                             icon="Trash"
                             size="21"
@@ -116,7 +114,9 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
                     aria-label="Toggle Dark Mode"
                     className="sr-only peer"
                     checked={isDarkMode}
-                    onChange={toggleDarkMode}
+                    onChange={() => {
+                      dispatch(updateDarkModeFirebase(!isDarkMode));
+                    }}
                   />
                   <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
                 </label>
