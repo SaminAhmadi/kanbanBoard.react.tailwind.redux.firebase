@@ -1,10 +1,14 @@
+// main
 import { FC } from 'react';
+import { useDroppable } from '@dnd-kit/core';
+// redux
+import { Column } from '../../../../store/redux/columns/columnSlice.ts';
+// hooks
+import { useAppSelector } from '../../../../hooks';
+// components
 import BoardColumns from '../../../../components/ui/common/columns';
 import TaskCard from '../../../../components/ui/common/task-card';
-import { useAppSelector } from '../../../../hooks';
-import { useDroppable } from '@dnd-kit/core';
-import { Column } from '../../../../store/redux/columns/columnSlice.ts';
-
+// types
 interface ColumnProps {
   col: Column;
 }

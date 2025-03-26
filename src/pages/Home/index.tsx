@@ -1,12 +1,12 @@
 import { FC, useEffect } from 'react';
-// data
+// redux
 import { fetchColumns } from '../../store/redux/columns/columnSlice.ts';
+import { fetchTasks } from '../../store/redux/tasks/taskSlice.ts';
 // components
 import AddNewColumn from '../../components/ui/common/add-new-column';
+import ColumnComponent from './components/column';
 // hooks
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { fetchTasks } from '../../store/redux/tasks/taskSlice.ts';
-import ColumnComponent from './components/column';
 
 const Home: FC = () => {
   const dispatch = useAppDispatch();

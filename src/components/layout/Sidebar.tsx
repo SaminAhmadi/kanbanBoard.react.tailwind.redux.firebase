@@ -11,10 +11,11 @@ import {
   fetchDarkMode,
   updateDarkModeFirebase,
 } from '../../store/redux/darkmode';
+// hooks
+import { useAppDispatch, useAppSelector } from '../../hooks';
 // components
 import IconProvider from '../../utils/icon-provider';
 import BoardModal from '../ui/common/modal/add-new-board';
-import { useAppDispatch, useAppSelector } from '../../hooks';
 import NavSkeleton from '../ui/skeleton/nav-skeleton';
 // types
 interface sidebarProps {

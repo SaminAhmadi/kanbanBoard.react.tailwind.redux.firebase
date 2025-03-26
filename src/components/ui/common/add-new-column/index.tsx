@@ -1,4 +1,6 @@
+// main
 import { FC, useState } from 'react';
+// components
 import IconProvider from '../../../../utils/icon-provider';
 import ColumnModal from '../modal/add-column-modal';
 

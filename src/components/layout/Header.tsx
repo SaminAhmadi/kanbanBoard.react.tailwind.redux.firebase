@@ -1,8 +1,9 @@
+// main
 import { FC, useState } from 'react';
 // components
 import IconProvider from '../../utils/icon-provider';
 import Modal from '../ui/common/modal/add-task-modal/index.tsx';
-
+// types
 interface HeaderProps {
   handleFnc: () => void;
 }

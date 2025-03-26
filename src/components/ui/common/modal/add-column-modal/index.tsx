@@ -1,8 +1,12 @@
+// main
 import { FC, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+// redux
 import { addNewColumn } from '../../../../../store/redux/columns/columnSlice.ts';
+// hooks
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+// components
 import IconProvider from '../../../../../utils/icon-provider';
-
+// types
 interface ColumnModalProps {
   onClose: () => void;
   openAnchEl: boolean;

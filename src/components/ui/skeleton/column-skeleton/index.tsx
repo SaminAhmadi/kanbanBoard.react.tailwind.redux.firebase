@@ -1,3 +1,4 @@
+// main
 import { FC } from 'react';
 
 const ColumnSkeleton: FC = () => {

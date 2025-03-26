@@ -1,7 +1,10 @@
+// main
 import { FC, useState } from 'react';
+// hooks
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+// redux
 import { addBoardToFirebase } from '../../../../../store/redux/boards/boardSlice.ts';
-
+// types
 interface BoardModalProps {
   openAnchorEl: boolean;
   onClose: () => void;

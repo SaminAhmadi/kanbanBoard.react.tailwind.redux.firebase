@@ -1,7 +1,10 @@
+// main
 import { FC, FormEvent, useState } from 'react';
-import { useAppDispatch } from '../../../../../hooks';
+// redux
 import { editTasksFirebase } from '../../../../../store/redux/tasks/taskSlice.ts';
-
+// hooks
+import { useAppDispatch } from '../../../../../hooks';
+// types
 interface EditTaskProps {
   open: boolean;
   handleClose: () => void;

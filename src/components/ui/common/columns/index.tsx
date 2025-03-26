@@ -1,10 +1,14 @@
+// main
 import { FC } from 'react';
-import IconProvider from '../../../../utils/icon-provider';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import ColumnSkeleton from '../../skeleton/column-skeleton';
 import { useDroppable } from '@dnd-kit/core';
+// redux
 import { removeColumnsFromFromFirebase } from '../../../../store/redux/columns/columnSlice.ts';
-
+// hooks
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+// components
+import IconProvider from '../../../../utils/icon-provider';
+import ColumnSkeleton from '../../skeleton/column-skeleton';
+// types
 interface boardColumnProps {
   title: string;
   color: string;

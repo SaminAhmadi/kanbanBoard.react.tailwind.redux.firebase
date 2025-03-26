@@ -1,8 +1,10 @@
+// main
 import { FC, FormEvent, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+// redux
 import { addToTasks } from '../../../../../store/redux/tasks/taskSlice.ts';
-// style
-
+// hooks
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+// types
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;

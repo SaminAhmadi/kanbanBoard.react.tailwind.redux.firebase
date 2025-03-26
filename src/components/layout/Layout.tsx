@@ -1,18 +1,20 @@
+// main
 import { FC, useState } from 'react';
-// components
-import Header from './Header.tsx';
-// style
-import '../../styles/index.css';
-import '../../styles/custom.css';
-// components
-import SideBarMenu from './Sidebar.tsx';
-import Home from '../../pages/Home';
-import { useAppDispatch, useAppSelector } from '../../hooks';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
+// redux
 import {
   setDragAndDropTasks,
   setTasks,
 } from '../../store/redux/tasks/taskSlice.ts';
+// hooks
+import { useAppDispatch, useAppSelector } from '../../hooks';
+// style
+import '../../styles/index.css';
+import '../../styles/custom.css';
+// components
+import Header from './Header.tsx';
+import SideBarMenu from './Sidebar.tsx';
+import Home from '../../pages/Home';
 
 const Layout: FC = () => {
   let [open, setOpen] = useState<boolean>(true);

@@ -1,12 +1,16 @@
+// main
 import { FC, useState } from 'react';
-import IconProvider from '../../../../utils/icon-provider';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import TaskcardSkeleton from '../../skeleton/taskcard-skeleton';
-import { useDraggable } from '@dnd-kit/core';
-import { deleteTaskFromFirebase } from '../../../../store/redux/tasks/taskSlice.ts';
 import * as React from 'react';
+import { useDraggable } from '@dnd-kit/core';
+// redux
+import { deleteTaskFromFirebase } from '../../../../store/redux/tasks/taskSlice.ts';
+// hooks
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+// components
+import IconProvider from '../../../../utils/icon-provider';
+import TaskcardSkeleton from '../../skeleton/taskcard-skeleton';
 import EditTaskModal from '../modal/edit-task-modal';
-
+// types
 interface TaskCardProps {
   title: string;
   id: string;
@@ -16,6 +20,7 @@ const TaskCard: FC<TaskCardProps> = ({ title, id }) => {
   console.log('Rendering TaskCard:', { id, title }); // Debugging
   const loading = useAppSelector(state => state.task.loading);
   const dispatch = useAppDispatch();
+
   // modal handling
   let [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const handleIsOpenModal = (modalValue: boolean) => {
