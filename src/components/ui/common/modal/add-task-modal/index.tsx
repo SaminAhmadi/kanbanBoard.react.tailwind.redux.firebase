@@ -13,6 +13,7 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose }) => {
   let [status, setStatus] = useState<string>('todo');
   const dispatch = useAppDispatch();
   const currentBoardID = useAppSelector(state => state.board.currentBoardId);
+  const columnTitles = useAppSelector(state => state.column.columns);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault(); // Prevent default form submission behavior
@@ -73,26 +74,14 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose }) => {
                 }
               }}
             >
-              <option
-                value="todo"
-                className="Montserrat-regular text-[var(--primary-text)] bg-[var(--primary-bg)]"
-              >
-                Todo
-              </option>
-              <hr />
-              <option
-                value="doing"
-                className="Montserrat-regular text-[var(--primary-text)] bg-[var(--primary-bg)]"
-              >
-                Doing
-              </option>
-              <hr />
-              <option
-                value="done"
-                className="Montserrat-regular text-[var(--primary-text)] bg-[var(--primary-bg)]"
-              >
-                Done
-              </option>
+              {columnTitles.map(col => (
+                <option
+                  value={col.title}
+                  className="Montserrat-regular text-[var(--primary-text)] bg-[var(--primary-bg)]"
+                >
+                  {col.title}
+                </option>
+              ))}
             </select>
           </div>
           {/* submit button */}

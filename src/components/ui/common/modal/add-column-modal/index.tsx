@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { addNewColumn } from '../../../../../store/redux/columns/columnSlice.ts';
+import IconProvider from '../../../../../utils/icon-provider';
 
 interface ColumnModalProps {
   onClose: () => void;
@@ -8,6 +9,7 @@ interface ColumnModalProps {
 }
 const ColumnModal: FC<ColumnModalProps> = ({ onClose, openAnchEl }) => {
   let [newCol, setNewCol] = useState<string>(' ');
+  let [iconColor, setIconColor] = useState<string>('');
   const dispatch = useAppDispatch();
   const currentBoard = useAppSelector(state => state.board.currentBoardId);
   const columnList = useAppSelector(state => state.column.columns);
@@ -17,7 +19,6 @@ const ColumnModal: FC<ColumnModalProps> = ({ onClose, openAnchEl }) => {
     <div
       id="default-modal"
       tabIndex={-1}
-      aria-hidden="true"
       className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full py-3"
     >
       {/* Transparent Black Background */}
@@ -49,6 +50,37 @@ const ColumnModal: FC<ColumnModalProps> = ({ onClose, openAnchEl }) => {
                 onChange={event => setNewCol(event.target.value)}
               />
             </div>
+            <div className="flex flex-col gap-3">
+              <p className="Montserrat-medium text-[var(--subtext-one)] text-sm">
+                Choose the color
+              </p>
+              <div className="flex items-center justify-center gap-2">
+                <IconProvider
+                  icon="RecordCircle"
+                  variant="Bulk"
+                  color="var(--circle-primary)"
+                  size="25"
+                  className="cursor-pointer transform scale-90 transition-transform duration-200 hover:scale-105 active:scale-110"
+                  onClick={() => setIconColor('var(--circle-primary)')}
+                />
+                <IconProvider
+                  icon="RecordCircle"
+                  variant="Bulk"
+                  color="var(--circle-secondary)"
+                  size="25"
+                  className="cursor-pointer transform scale-90 transition-transform duration-200 hover:scale-105 active:scale-110"
+                  onClick={() => setIconColor('var(--circle-secondary)')}
+                />
+                <IconProvider
+                  icon="RecordCircle"
+                  variant="Bulk"
+                  color="var(--circle-third)"
+                  size="25"
+                  className="cursor-pointer transform scale-90 transition-transform duration-200 hover:scale-105 active:scale-110"
+                  onClick={() => setIconColor('var(--circle-third)')}
+                />
+              </div>
+            </div>
           </div>
           <button
             type="button"
@@ -60,6 +92,7 @@ const ColumnModal: FC<ColumnModalProps> = ({ onClose, openAnchEl }) => {
                   addNewColumn({
                     columnTitle: newCol,
                     currentBoard: currentBoard,
+                    colorIcon: iconColor,
                   }),
                 );
               }

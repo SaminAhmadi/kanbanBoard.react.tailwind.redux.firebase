@@ -1,22 +1,26 @@
+// main
 import { FC, useEffect, useState } from 'react';
-// components
-import IconProvider from '../../utils/icon-provider';
-import BoardModal from '../ui/common/modal/add-new-board';
+// redux
 import {
   fetchBoards,
   removeBoard,
   setCurrentBoard,
+  setLoading,
 } from '../../store/redux/boards/boardSlice.ts';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import NavSkeleton from '../ui/skeleton/nav-skeleton';
 import {
   fetchDarkMode,
   updateDarkModeFirebase,
 } from '../../store/redux/darkmode';
-
+// components
+import IconProvider from '../../utils/icon-provider';
+import BoardModal from '../ui/common/modal/add-new-board';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import NavSkeleton from '../ui/skeleton/nav-skeleton';
+// types
 interface sidebarProps {
   open: boolean;
 }
+
 const SideBarMenu: FC<sidebarProps> = ({ open }) => {
   const dispatch = useAppDispatch();
   const boards = useAppSelector(state => state.board.boards);
@@ -24,11 +28,13 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
   const isDarkMode = useAppSelector(
     state => state.darkmode.darkmode.isDarkMode,
   );
+  let [hasFetched, setHasFetched] = useState(false);
   // fetching data
   useEffect(() => {
     dispatch(fetchBoards());
-    dispatch(fetchDarkMode());
-  }, [dispatch]);
+    dispatch(fetchDarkMode()).then(() => setLoading(false));
+    setHasFetched(true);
+  }, [dispatch, hasFetched]);
 
   // select a board based on their id
   const handleBoardSelect = (boardId: string) => {
@@ -44,13 +50,13 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
           <NavSkeleton />
         ) : (
           <>
-            <nav className="w-[17%] pt-3 flex flex-col gap-2 bg-[var(--primary-bg)]">
+            <nav className="md:w-[17%] pt-3 flex flex-col gap-2 bg-[var(--primary-bg)] sm:w-full sm:py-3">
               {/* boards section */}
-              <p className="Montserrat-regular text-[var(--subtext-one)] pb-2 pl-3">
+              <h3 className="Montserrat-regular text-[var(--subtext-one)] pb-2 pl-3">
                 ALL BOARDS
-              </p>
-              <div className="w-full h-full flex flex-col gap-1.5 group transition-colors duration-200">
-                <div className="flex flex-col gap-3">
+              </h3>
+              <div className="w-full h-full flex flex-col gap-1.5 group transition-colors duration-200 sm:flex sm:flex-col sm:gap-3">
+                <div className="flex flex-col gap-3 sm:flex sm:flex-col sm:gap-3">
                   {boards
                     .slice() // Create a shallow copy to avoid mutating state
                     .sort((a, b) => a.id.localeCompare(b.id)) // Sort alphabetically by ID
@@ -60,16 +66,16 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
                         className="Montserrat-semiBold group text-[var(--primary-text)] hover:text-white transition duration-200"
                         onClick={() => handleBoardSelect(board.id)}
                       >
-                        <div className="w-[90%] flex items-center justify-between hover:bg-[var(--button-primary)] bg-[var(--tertiary-bg)] rounded-tr-2xl rounded-br-2xl p-3 cursor-pointer transition">
+                        <div className="md:w-[90%] sm:w-full flex items-center justify-between hover:bg-[var(--button-primary)] bg-[var(--tertiary-bg)] rounded-tr-2xl rounded-br-2xl p-3 cursor-pointer transition">
                           <IconProvider
                             icon="MenuBoard"
                             size="21"
                             className="fill-[var(--icon-color)]"
                             variant="Bold"
                           />
-                          <p className="Montserrat-bold text-[0.9rem]">
+                          <h3 className="Montserrat-bold text-[0.9rem]">
                             {board.title}
-                          </p>
+                          </h3>
                           <IconProvider
                             icon="Trash"
                             size="21"
@@ -83,7 +89,7 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
                 </div>
                 {/* create new board */}
                 <div className="flex flex-col gap-3">
-                  <div className=" w-[90%] flex items-center gap-2 rounded-tr-2xl rounded-br-2xl p-3 cursor-pointer transition">
+                  <div className="md:w-[90%] sm:w-full sm:flex sm:justify-center md:flex md:items-center md:gap-2 rounded-tr-2xl rounded-br-2xl p-3 cursor-pointer transition">
                     <IconProvider
                       icon="MenuBoard"
                       size="21"
@@ -100,7 +106,7 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
                 </div>
               </div>
               {/* toggle button */}
-              <div className="flex items-center justify-center gap-3 bg-[var(--button-secondary)] py-4 px-3 rounded-s shadow-[-1px_-2px_16px_0px_rgba(0,_0,_0,_0.1)]">
+              <div className="flex items-center justify-center gap-3 bg-[var(--button-secondary)] py-4 px-2 rounded-s shadow-[-1px_-2px_16px_0px_rgba(0,_0,_0,_0.1)]">
                 <IconProvider
                   icon="Sun1"
                   variant="Bold"

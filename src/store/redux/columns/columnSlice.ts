@@ -6,17 +6,18 @@ import {
   query,
   where,
   orderBy,
-  updateDoc,
+  doc,
+  deleteDoc,
 } from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig.js';
-import columns from '../../../components/ui/common/columns';
+import { removeTasks } from '../tasks/taskSlice.ts';
 
 export interface Column {
   boardID: string | null;
   title: string;
   id: string;
   icon: string;
-  position: number;
+  timestamp: string;
 }
 interface columnState {
   columns: Column[];
@@ -65,6 +66,16 @@ const columnSlice = createSlice({
         state.loading = false;
         console.error('Failed to fetch columns:', action.error.message);
       });
+    builder
+      .addCase(removeColumnsFromFromFirebase.pending, state => {
+        state.loading = true;
+      })
+      .addCase(removeColumnsFromFromFirebase.fulfilled, (state, action) => {
+        state.loading = false;
+        state.columns = state.columns.filter(
+          col => col.id !== action.payload.colID,
+        );
+      });
   },
 });
 
@@ -76,74 +87,95 @@ const capitalizeWords = (str: string) => {
 export const fetchColumns = createAsyncThunk(
   'columns/fetchColumns',
   async (boardID: string) => {
-    const q = query(collection(db, 'columns'), where('boardID', '==', boardID));
+    const q = query(
+      collection(db, 'columns'),
+      where('boardID', '==', boardID),
+      orderBy('timestamp', 'asc'),
+    );
     const columnDocs = await getDocs(q);
-    return columnDocs.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Column[];
+    return columnDocs.docs.map(doc => {
+      const data = doc.data();
+      // Generate a new JS timestamp (current time + offset)
+      const newTimestamp = new Date();
+      newTimestamp.setHours(newTimestamp.getHours() + 1); // Add 1 hour
+      newTimestamp.setMinutes(newTimestamp.getMinutes() + 30); // Add 30 minutes
+      newTimestamp.setSeconds(newTimestamp.getSeconds() + 45); // Add 45 seconds
+      return {
+        ...data,
+        id: doc.id,
+        timestamp: newTimestamp.toISOString(),
+      };
+    }) as Column[];
   },
 );
-// After adding a new column, update other columns' positions
-const updateColumnPositions = async (
-  boardID: string | null,
-  newPosition: number,
-) => {
-  const columnsQuery = query(
-    collection(db, 'columns'),
-    where('boardID', '==', boardID),
-    orderBy('position'),
-  );
-  const querySnapshot = await getDocs(columnsQuery);
-
-  // Create an array of promises for each updateDoc operation
-  const updatePromises = querySnapshot.docs.map(async (doc, index) => {
-    const columnRef = doc.ref;
-    const updatedPosition = index >= newPosition ? index + 1 : index;
-    await updateDoc(columnRef, { position: updatedPosition });
-  });
-
-  // Wait for all updates to complete
-  await Promise.all(updatePromises);
-};
 
 // async thunk to add extra columns on the current board
 export const addNewColumn = createAsyncThunk(
   'columns/addNewColumn',
   async (
     {
+      colorIcon,
       columnTitle,
       currentBoard,
-    }: { columnTitle: string; currentBoard: string | null },
+    }: { colorIcon: string; columnTitle: string; currentBoard: string | null },
     { dispatch },
   ) => {
     try {
-      const icons = [
-        '--circle-primary',
-        '--circle-secondary',
-        '--circle-third',
-      ];
-      const randomIndex = Math.floor(Math.random() * icons.length);
-      const currentIcon = icons[randomIndex];
-      console.log(currentIcon);
+      console.log('icon: ', colorIcon);
+      // sorting with timestamp
+      const newTimestamp = new Date();
+      newTimestamp.setHours(newTimestamp.getHours() + 1); // Add 1 hour
+      newTimestamp.setMinutes(newTimestamp.getMinutes() + 30); // Add 30 minutes
+      newTimestamp.setSeconds(newTimestamp.getSeconds() + 45); // Add 45 seconds
       const ColumnDocs = await addDoc(collection(db, 'columns'), {
         id: Math.floor(Math.random() * 100),
         title: capitalizeWords(columnTitle),
         boardID: currentBoard,
-        icon: currentIcon,
-        position: columns.length + 1,
+        icon: colorIcon,
+        timestamp: newTimestamp.toISOString(),
       });
       const newCol = {
         id: ColumnDocs.id,
         title: capitalizeWords(columnTitle),
         boardID: currentBoard,
-        icon: '--circle-third',
-        position: columns.length + 1,
+        icon: colorIcon,
+        timestamp: newTimestamp.toISOString(),
       };
-      await updateColumnPositions(currentBoard, columns.length);
       dispatch(addColumn(newCol)); // update redux
     } catch (error) {
       console.log('adding column error: ', error);
+    }
+  },
+);
+
+// remove column
+export const removeColumnsFromFromFirebase = createAsyncThunk(
+  'columns/removeColumnsFromFirebase',
+  async (
+    { colID, colTitle }: { colID: string; colTitle: string },
+    { rejectWithValue, dispatch },
+  ) => {
+    try {
+      // Query all tasks where taskStatus === colTitle
+      const taskQuery = query(
+        collection(db, 'tasks'),
+        where('status', '==', colTitle),
+      );
+      // Delete all matching tasks
+      const taskSnapShots = await getDocs(taskQuery);
+      const deletedTasks = taskSnapShots.docs.map(task => {
+        deleteDoc(doc(db, 'tasks', task.id));
+        dispatch(removeTasks(task.id));
+      });
+      await Promise.all(deletedTasks);
+      // Delete the column
+      await deleteDoc(doc(db, 'columns', colID));
+      // Update Redux store
+      dispatch(removeColumn(colID));
+      return { colID };
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
     }
   },
 );

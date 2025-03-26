@@ -74,10 +74,20 @@ export const addBoardToFirebase = createAsyncThunk(
   'boards/addBoardToFirebase',
   async (boardTitle: string, { dispatch }) => {
     try {
+      // sorting with timestamp
+      const newTimestamp = new Date();
+      newTimestamp.setHours(newTimestamp.getHours() + 1); // Add 1 hour
+      newTimestamp.setMinutes(newTimestamp.getMinutes() + 30); // Add 30 minutes
+      newTimestamp.setSeconds(newTimestamp.getSeconds() + 45); // Add 45 seconds
       const docRef = await addDoc(collection(db, 'boards'), {
         title: boardTitle,
+        timestamp: newTimestamp.toISOString(),
       });
-      const newBoard = { id: docRef.id, title: boardTitle };
+      const newBoard = {
+        id: docRef.id,
+        title: boardTitle,
+        timestamp: newTimestamp.toISOString(),
+      };
       dispatch(addBoard(newBoard)); // Update Redux state
     } catch (error) {
       console.error('Error adding board:', error);

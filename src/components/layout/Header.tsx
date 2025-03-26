@@ -22,18 +22,21 @@ const Header: FC<HeaderProps> = ({ handleFnc }) => {
                 size="32"
               />
             </button>
-            <h1 className="Montserrat-extraBold text-3xl text-[var(--primary-text)]">
+            <h1 className="Montserrat-extraBold text-3xl text-[var(--primary-text)] sm:text-[1rem] md:text-[1.5rem]">
               KanBan Board
             </h1>
           </div>
           <div className="py-2">
             <button
-              className="bg-[var(--button-primary)] border-0 px-3 py-2 rounded-3xl"
+              className="bg-[var(--button-primary)] border-0 md:px-3 md:py-2 rounded-3xl sm:px-2 sm:py-1"
               data-modal-target="default-modal"
               data-modal-toggle="default-modal"
               onClick={() => setIsModalOpen(true)}
+              aria-label="Open Menu"
             >
-              <p className="Montserrat-bold text-white">+ Add New Task</p>
+              <p className="Montserrat-bold text-white sm:text-[1rem]">
+                + Add New Task
+              </p>
             </button>
           </div>
         </div>
