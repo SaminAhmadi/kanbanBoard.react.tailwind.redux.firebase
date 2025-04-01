@@ -2,7 +2,7 @@
 import { FC, useState } from 'react';
 // components
 import IconProvider from '../../../../utils/icon-provider';
-import ColumnModal from '../modal/add-column-modal';
+import ColumnModal from '../../../../components/ui/common/modal/add-column-modal';
 
 const AddNewColumn: FC = () => {
   let [isModalOpen, setIsModalOpen] = useState<boolean>(false);

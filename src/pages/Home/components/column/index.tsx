@@ -6,7 +6,7 @@ import { Column } from '../../../../store/redux/columns/columnSlice.ts';
 // hooks
 import { useAppSelector } from '../../../../hooks';
 // components
-import BoardColumns from '../../../../components/ui/common/columns';
+import BoardColumns from '../../../../components/ui/common/sidebar-columns';
 import TaskCard from '../../../../components/ui/common/task-card';
 // types
 interface ColumnProps {

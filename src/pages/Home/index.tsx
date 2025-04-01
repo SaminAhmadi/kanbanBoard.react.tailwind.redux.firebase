@@ -3,8 +3,8 @@ import { FC, useEffect } from 'react';
 import { fetchColumns } from '../../store/redux/columns/columnSlice.ts';
 import { fetchTasks } from '../../store/redux/tasks/taskSlice.ts';
 // components
-import AddNewColumn from '../../components/ui/common/add-new-column';
 import ColumnComponent from './components/column';
+import AddNewColumn from './components/add-new-column';
 // hooks
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
