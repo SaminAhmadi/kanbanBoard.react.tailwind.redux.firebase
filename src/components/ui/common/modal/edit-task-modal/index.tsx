@@ -35,7 +35,7 @@ const EditTaskModal: FC<EditTaskProps> = ({
     >
       <div className="transparent-bg"></div>
       <form
-        className="w-[30%] bg-[--primary-bg] flex flex-col gap-4 p-4 rounded-xl"
+        className="xl:w-[30%] sm:w-[80%] md:w-[50%] bg-[--primary-bg] flex flex-col gap-4 p-4 rounded-xl"
         onSubmit={handleSubmit}
       >
         {/* form header */}
