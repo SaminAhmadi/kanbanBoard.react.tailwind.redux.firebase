@@ -6,6 +6,8 @@ import {
   addDoc,
   deleteDoc,
   doc,
+  query,
+  orderBy,
 } from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig.js';
 import { removeColumn } from '../columns/columnSlice.ts';
@@ -59,7 +61,10 @@ const boardSlice = createSlice({
 // using Firebase to fetch data
 export const fetchBoards = () => async (dispatch: any) => {
   dispatch(boardSlice.actions.setLoading(true));
-  const boardsCollection = collection(db, 'boards');
+  const boardsCollection = query(
+    collection(db, 'boards'),
+    orderBy('timestamp', 'asc'),
+  );
   const boardDocuments = await getDocs(boardsCollection);
   const boardList: Board[] = boardDocuments.docs.map(doc => ({
     id: doc.id,
@@ -81,12 +86,11 @@ export const addBoardToFirebase = createAsyncThunk(
       newTimestamp.setSeconds(newTimestamp.getSeconds() + 45); // Add 45 seconds
       const docRef = await addDoc(collection(db, 'boards'), {
         title: boardTitle,
-        timestamp: newTimestamp.toISOString(),
+        timestamp: newTimestamp,
       });
       const newBoard = {
         id: docRef.id,
         title: boardTitle,
-        timestamp: newTimestamp.toISOString(),
       };
       dispatch(addBoard(newBoard)); // Update Redux state
     } catch (error) {

@@ -29,13 +29,13 @@ const Home: FC = () => {
   return (
     <div className="w-full p-8 flex justify-between gap-6 flex-wrap">
       <div
-        className={`grid md:grid-cols-3 sm:grid-cols-1 ${columns.length == 1 ? `w-[60%]` : `md:w-[70%] gap-3 sm:w-full`} flex-row`}
+        className={`grid xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 ${columns.length == 1 ? `w-[60%]` : `md:w-[70%] gap-3 sm:w-full`} flex-row`}
       >
         {columns.map(col => (
           <ColumnComponent col={col} key={col.id} />
         ))}
       </div>
-      <div className="md:w-[25%] sm:w-full">
+      <div className="lg:w-[25%] sm:w-full">
         <AddNewColumn />
       </div>
     </div>

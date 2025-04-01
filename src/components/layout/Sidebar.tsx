@@ -51,7 +51,7 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
           <NavSkeleton />
         ) : (
           <>
-            <nav className="md:w-[17%] pt-3 flex flex-col gap-2 bg-[var(--primary-bg)] sm:w-full sm:py-3">
+            <nav className="lg:w-[20%] md:w-[40%] pt-3 flex flex-col gap-2 bg-[var(--primary-bg)] sm:w-full sm:py-3">
               {/* boards section */}
               <h3 className="Montserrat-regular text-[var(--subtext-one)] pb-2 pl-3">
                 ALL BOARDS
