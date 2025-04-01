@@ -18,7 +18,7 @@ const Home: FC = () => {
       dispatch(fetchColumns(currentBoardId));
       dispatch(fetchTasks(currentBoardId));
     }
-  }, [currentBoardId]);
+  }, [currentBoardId, dispatch]);
 
   if (columns.length <= 0)
     return (
