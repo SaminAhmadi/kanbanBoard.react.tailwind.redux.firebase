@@ -27,7 +27,7 @@ const ColumnModal: FC<ColumnModalProps> = ({ onClose, openAnchEl }) => {
     >
       {/* Transparent Black Background */}
       <div className="transparent-bg"></div>
-      <div className="relative z-[40] w-[30%] max-w-2xl max-h-full p-6  bg-[var(--secondary-bg)] rounded-lg shadow-lg">
+      <div className="relative z-[40] xl:w-[30%] sm:w-[80%] max-w-2xl max-h-full p-6  bg-[var(--secondary-bg)] rounded-lg shadow-lg">
         {/*  modal content */}
         <form className="flex flex-col gap-4">
           {/* form header */}
