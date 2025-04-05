@@ -21,9 +21,12 @@ const Layout: FC = () => {
   const HandleToggle = () => {
     setOpen(!open);
   };
+
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(state => state.task.tasks);
   const columns = useAppSelector(state => state.column.columns);
+
+  // handling drag end function
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over) return;
