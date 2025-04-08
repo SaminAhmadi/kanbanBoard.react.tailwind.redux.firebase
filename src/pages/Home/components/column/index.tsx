@@ -16,6 +16,7 @@ interface ColumnProps {
 const ColumnComponent: FC<ColumnProps> = ({ col }) => {
   const tasks = useAppSelector(state => state.task.tasks);
   const { setNodeRef } = useDroppable({ id: col.id });
+
   return (
     <div key={col.id} className="w-full flex flex-col gap-4" ref={setNodeRef}>
       <BoardColumns id={col.id} color={col.icon} title={col.title} />

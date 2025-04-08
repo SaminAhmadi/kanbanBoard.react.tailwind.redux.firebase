@@ -14,10 +14,10 @@ interface ColumnModalProps {
 const ColumnModal: FC<ColumnModalProps> = ({ onClose, openAnchEl }) => {
   let [newCol, setNewCol] = useState<string>(' ');
   let [iconColor, setIconColor] = useState<string>('');
+
   const dispatch = useAppDispatch();
   const currentBoard = useAppSelector(state => state.board.currentBoardId);
-  const columnList = useAppSelector(state => state.column.columns);
-  console.log(columnList);
+
   if (!openAnchEl) return null;
   return (
     <div

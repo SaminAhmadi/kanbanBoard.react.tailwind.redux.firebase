@@ -12,10 +12,6 @@
     z-index: -1;
     position: absolute;
 }
-.kanbanBoard-transition {
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-}
-.kanbanBoard-transition.loaded {
-    opacity: 1;
+.boards-button{
+    background-color: var(--button-primary);
 }

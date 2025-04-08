@@ -17,9 +17,7 @@ interface boardColumnProps {
 
 const BoardColumns: FC<boardColumnProps> = ({ id, title, color }) => {
   const loading = useAppSelector(state => state.column.loading);
-  const currentBoardID = useAppSelector(state => state.board.currentBoardId);
   const dispatch = useAppDispatch();
-  console.log(currentBoardID, color);
   // droppable section
   const { setNodeRef } = useDroppable({
     id: title,

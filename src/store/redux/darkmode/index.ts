@@ -40,7 +40,6 @@ export const fetchDarkMode = createAsyncThunk(
 
       if (docSnap.exists()) {
         const isDarkMode = docSnap.data().isDarkMode;
-        console.log('Dark mode state fetched:', isDarkMode);
 
         // Apply dark mode instantly on load
         if (isDarkMode) {
@@ -66,7 +65,6 @@ export const updateDarkModeFirebase = createAsyncThunk(
   async (isDark: boolean, { rejectWithValue, dispatch }) => {
     try {
       dispatch(setDarkModeToggle(isDark));
-      console.log('Updating dark mode in Firestore:', isDark);
       const darkModeDocRef = doc(db, 'darkmode', 'dark-mode');
 
       // Use setDoc to update Firestore, creating the document if it doesn't exist

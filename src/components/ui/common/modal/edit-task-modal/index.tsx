@@ -19,13 +19,14 @@ const EditTaskModal: FC<EditTaskProps> = ({
   open,
 }) => {
   let [value, setValue] = useState<string>(description);
+
   const dispatch = useAppDispatch();
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault(); // Prevent default form submission behavior
     dispatch(editTasksFirebase({ taskId: id, description: value }));
     handleClose();
   };
-  console.log('close: ', handleClose, 'open value:', open);
+
   if (!open) return;
   return (
     <div

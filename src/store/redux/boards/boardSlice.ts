@@ -16,6 +16,7 @@ import { removeTasks } from '../tasks/taskSlice.ts';
 export interface Board {
   id: string;
   title: string;
+  timestamp: number;
 }
 // Define the initial state type
 interface BoardState {
@@ -66,10 +67,14 @@ export const fetchBoards = () => async (dispatch: any) => {
     orderBy('timestamp', 'asc'),
   );
   const boardDocuments = await getDocs(boardsCollection);
-  const boardList: Board[] = boardDocuments.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Board[];
+  const boardList: Board[] = boardDocuments.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      title: data.title,
+      timestamp: data.timestamp.toMillis(),
+    };
+  }) as Board[];
   dispatch(boardSlice.actions.setBoards(boardList));
   dispatch(boardSlice.actions.setLoading(false));
 };
@@ -81,9 +86,6 @@ export const addBoardToFirebase = createAsyncThunk(
     try {
       // sorting with timestamp
       const newTimestamp = new Date();
-      newTimestamp.setHours(newTimestamp.getHours() + 1); // Add 1 hour
-      newTimestamp.setMinutes(newTimestamp.getMinutes() + 30); // Add 30 minutes
-      newTimestamp.setSeconds(newTimestamp.getSeconds() + 45); // Add 45 seconds
       const docRef = await addDoc(collection(db, 'boards'), {
         title: boardTitle,
         timestamp: newTimestamp,
@@ -91,6 +93,7 @@ export const addBoardToFirebase = createAsyncThunk(
       const newBoard = {
         id: docRef.id,
         title: boardTitle,
+        timestamp: newTimestamp.getTime(),
       };
       dispatch(addBoard(newBoard)); // Update Redux state
     } catch (error) {
@@ -109,9 +112,8 @@ export const removeBoard = createAsyncThunk(
       dispatch(removeBoards(boardID));
       dispatch(removeColumn(boardID));
       dispatch(removeTasks(boardID));
-      console.log('board deleted successfully!');
     } catch (error) {
-      console.log('board didnt get deleted cause the error is :', error);
+      console.error('board didnt get deleted cause the error is :', error);
     }
   },
 );

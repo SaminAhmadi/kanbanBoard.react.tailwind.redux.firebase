@@ -1,7 +1,7 @@
 // main
 import { FC, useState } from 'react';
 // hooks
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { useAppDispatch } from '../../../../../hooks';
 // redux
 import { addBoardToFirebase } from '../../../../../store/redux/boards/boardSlice.ts';
 // types
@@ -12,10 +12,9 @@ interface BoardModalProps {
 const BoardModal: FC<BoardModalProps> = ({ onClose, openAnchorEl }) => {
   let [newBoard, setNewBoard] = useState<string>('');
   const dispatch = useAppDispatch();
-  const boards = useAppSelector(state => state.board.boards);
-  console.log(newBoard);
-  console.log(boards);
+
   if (!openAnchorEl) return null;
+
   return (
     <div
       id="default-modal"
@@ -47,7 +46,7 @@ const BoardModal: FC<BoardModalProps> = ({ onClose, openAnchorEl }) => {
             <div className="flex flex-col gap-2">
               <input
                 className="rounded-md p-2 w-full border-2 outline-none bg-transparent text-[var(--primary-text)] focus:border-[var(--hover-text)]"
-                placeholder="e.g : Todo"
+                placeholder="e.g : roadmap"
                 onChange={event => setNewBoard(event.target.value)}
               />
             </div>

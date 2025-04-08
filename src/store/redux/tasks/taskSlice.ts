@@ -136,12 +136,9 @@ export const deleteTaskFromFirebase = createAsyncThunk(
   async (taskID: string, { dispatch }) => {
     try {
       await deleteDoc(doc(db, 'tasks', taskID));
-      console.log('task deleted successfuly', taskID);
       dispatch(removeTasks(taskID));
       return taskID;
-    } catch (error) {
-      console.log('task couldnt get removed due to ', error);
-    }
+    } catch (error) {}
   },
 );
 

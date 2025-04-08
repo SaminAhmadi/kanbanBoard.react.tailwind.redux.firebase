@@ -17,7 +17,6 @@ interface TaskCardProps {
 }
 
 const TaskCard: FC<TaskCardProps> = ({ title, id }) => {
-  console.log('Rendering TaskCard:', { id, title }); // Debugging
   const loading = useAppSelector(state => state.task.loading);
   const dispatch = useAppDispatch();
 
@@ -77,7 +76,6 @@ const TaskCard: FC<TaskCardProps> = ({ title, id }) => {
                 onPointerDown={handlePointerDown}
                 className="p-1 rounded-md bg-red-200 hover:bg-red-300 transition"
                 onClick={() => {
-                  console.log('Deleting task with ID:', id);
                   dispatch(deleteTaskFromFirebase(id));
                 }}
               >

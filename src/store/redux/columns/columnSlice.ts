@@ -121,7 +121,6 @@ export const addNewColumn = createAsyncThunk(
     { dispatch },
   ) => {
     try {
-      console.log('icon: ', colorIcon);
       // sorting with timestamp
       const newTimestamp = new Date();
       newTimestamp.setHours(newTimestamp.getHours() + 1); // Add 1 hour
@@ -143,7 +142,7 @@ export const addNewColumn = createAsyncThunk(
       };
       dispatch(addColumn(newCol)); // update redux
     } catch (error) {
-      console.log('adding column error: ', error);
+      console.error('adding column error: ', error);
     }
   },
 );

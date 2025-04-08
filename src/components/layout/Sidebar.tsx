@@ -23,13 +23,9 @@ interface sidebarProps {
 }
 
 const SideBarMenu: FC<sidebarProps> = ({ open }) => {
-  const dispatch = useAppDispatch();
-  const boards = useAppSelector(state => state.board.boards);
-  const loading = useAppSelector(state => state.board.loading);
-  const isDarkMode = useAppSelector(
-    state => state.darkmode.darkmode.isDarkMode,
-  );
   let [hasFetched, setHasFetched] = useState(false);
+  const dispatch = useAppDispatch();
+
   // fetching data
   useEffect(() => {
     dispatch(fetchBoards());
@@ -37,12 +33,21 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
     setHasFetched(true);
   }, [dispatch, hasFetched]);
 
+  const boards = useAppSelector(state => state.board.boards);
+  const loading = useAppSelector(state => state.board.loading);
+  const currentBoardId = useAppSelector(state => state.board.currentBoardId);
+
+  const isDarkMode = useAppSelector(
+    state => state.darkmode.darkmode.isDarkMode,
+  );
+
+  // open modal functionality
+  let [isOpenModal, setIsOpenModal] = useState(false);
+
   // select a board based on their id
   const handleBoardSelect = (boardId: string) => {
     dispatch(setCurrentBoard(boardId));
   };
-  // open modal functionality
-  let [isOpenModal, setIsOpenModal] = useState(false);
 
   return (
     open && (
@@ -59,15 +64,17 @@ const SideBarMenu: FC<sidebarProps> = ({ open }) => {
               <div className="w-full h-full flex flex-col gap-1.5 group transition-colors duration-200 sm:flex sm:flex-col sm:gap-3">
                 <div className="flex flex-col gap-3 sm:flex sm:flex-col sm:gap-3">
                   {boards
-                    .slice() // Create a shallow copy to avoid mutating state
-                    .sort((a, b) => a.id.localeCompare(b.id)) // Sort alphabetically by ID
+                    .slice()
+                    .sort((a, b) => a.timestamp - b.timestamp)
                     .map(board => (
                       <button
                         key={board.id}
                         className="Montserrat-semiBold group text-[var(--primary-text)] hover:text-white transition duration-200"
                         onClick={() => handleBoardSelect(board.id)}
                       >
-                        <div className="md:w-[90%] sm:w-full flex items-center justify-between hover:bg-[var(--button-primary)] bg-[var(--tertiary-bg)] rounded-tr-2xl rounded-br-2xl p-3 cursor-pointer transition">
+                        <div
+                          className={`md:w-[90%] sm:w-full flex items-center justify-between hover:bg-[var(--button-primary)] bg-[var(--tertiary-bg)] rounded-tr-2xl rounded-br-2xl p-3 cursor-pointer transition ${board.id === currentBoardId ? 'boards-button' : ''}`}
+                        >
                           <IconProvider
                             icon="MenuBoard"
                             size="21"

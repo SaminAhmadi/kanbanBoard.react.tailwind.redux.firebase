@@ -13,7 +13,9 @@ interface ModalProps {
 const Modal: FC<ModalProps> = ({ isOpen, onClose }) => {
   let [description, setDescription] = useState<string>('');
   let [status, setStatus] = useState<string>('todo');
+
   const dispatch = useAppDispatch();
+
   const currentBoardID = useAppSelector(state => state.board.currentBoardId);
   const columnTitles = useAppSelector(state => state.column.columns);
 

@@ -6,6 +6,7 @@ import ColumnModal from '../../../../components/ui/common/modal/add-column-modal
 
 const AddNewColumn: FC = () => {
   let [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   return (
     <>
       <div className="h-full flex gap-2 items-center justify-center bg-[var(--tertiary-bg)] max-w-full p-8">

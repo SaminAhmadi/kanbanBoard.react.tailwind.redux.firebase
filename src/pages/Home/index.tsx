@@ -1,12 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 // redux
 import { fetchColumns } from '../../store/redux/columns/columnSlice.ts';
-import { fetchTasks, setCurrentID } from '../../store/redux/tasks/taskSlice.ts';
+import { fetchTasks } from '../../store/redux/tasks/taskSlice.ts';
 // components
 import ColumnComponent from './components/column';
 import AddNewColumn from './components/add-new-column';
 // hooks
 import { useAppDispatch, useAppSelector } from '../../hooks';
+import { setCurrentBoard } from '../../store/redux/boards/boardSlice.ts';
 
 const Home: FC = () => {
   const [, setLoading] = useState<boolean>(false);
@@ -21,7 +22,7 @@ const Home: FC = () => {
       setLoading(true);
       // If there's no current board ID, set it to the first board's ID
       if (!currentBoardId && boards.length > 0) {
-        dispatch(setCurrentID(boards[0].id));
+        dispatch(setCurrentBoard(boards[0].id));
         dispatch(fetchColumns(boards[0].id));
         dispatch(fetchTasks(boards[0].id));
       }
