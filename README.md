@@ -1,4 +1,7 @@
 # React + TypeScript + Vite
+## Live Demo
+You can check out the live version [here](https://kanban-board-react-tailwind-redux-firebase.vercel.app/)
+
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
