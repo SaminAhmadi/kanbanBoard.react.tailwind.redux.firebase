@@ -17,7 +17,7 @@ export interface Column {
   title: string;
   id: string;
   icon: string;
-  timestamp: string;
+  timestamp: number;
 }
 interface columnState {
   columns: Column[];
@@ -95,15 +95,11 @@ export const fetchColumns = createAsyncThunk(
     const columnDocs = await getDocs(q);
     return columnDocs.docs.map(doc => {
       const data = doc.data();
-      // Generate a new JS timestamp (current time + offset)
       const newTimestamp = new Date();
-      newTimestamp.setHours(newTimestamp.getHours() + 1); // Add 1 hour
-      newTimestamp.setMinutes(newTimestamp.getMinutes() + 30); // Add 30 minutes
-      newTimestamp.setSeconds(newTimestamp.getSeconds() + 45); // Add 45 seconds
       return {
         ...data,
         id: doc.id,
-        timestamp: newTimestamp.toISOString(),
+        timestamp: newTimestamp.getTime(),
       };
     }) as Column[];
   },
@@ -123,22 +119,19 @@ export const addNewColumn = createAsyncThunk(
     try {
       // sorting with timestamp
       const newTimestamp = new Date();
-      newTimestamp.setHours(newTimestamp.getHours() + 1); // Add 1 hour
-      newTimestamp.setMinutes(newTimestamp.getMinutes() + 30); // Add 30 minutes
-      newTimestamp.setSeconds(newTimestamp.getSeconds() + 45); // Add 45 seconds
       const ColumnDocs = await addDoc(collection(db, 'columns'), {
         id: Math.floor(Math.random() * 100),
         title: capitalizeWords(columnTitle),
         boardID: currentBoard,
         icon: colorIcon,
-        timestamp: newTimestamp.toISOString(),
+        timestamp: newTimestamp,
       });
       const newCol = {
         id: ColumnDocs.id,
         title: capitalizeWords(columnTitle),
         boardID: currentBoard,
         icon: colorIcon,
-        timestamp: newTimestamp.toISOString(),
+        timestamp: newTimestamp.getTime(),
       };
       dispatch(addColumn(newCol)); // update redux
     } catch (error) {
